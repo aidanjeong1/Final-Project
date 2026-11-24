@@ -29,6 +29,7 @@ DroneTree::~DroneTree() { destroy(root); }
 
 void DroneTree::destroy(TreeNode* node)
 {
+    // TODO: delete every node (post-order)
     // delete every node (post-order); the units are NOT deleted
     if (node) {
         destroy(node->left);
@@ -48,6 +49,7 @@ bool DroneTree::insert(DeliveryUnit* u)
 
 bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
 {
+    // TODO: smaller IDs left, larger right; false on a duplicate
     // smaller IDs left, larger right; false on a duplicate
     if (!node) {
         node = new TreeNode{u, nullptr, nullptr};   // TreeNode has no constructor
@@ -62,6 +64,7 @@ bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
     return false;
 }
 
+// TODO: one comparison per node examined
 DeliveryUnit* DroneTree::search(int id, int& comparisons) const
 {
     comparisons = 0;
@@ -100,6 +103,7 @@ bool DroneTree::remove(int id)
 
 bool DroneTree::removeHelper(TreeNode*& node, int id)
 {
+    // TODO: three cases; two children -> in-order successor
     // three cases; two children -> in-order successor
     if (!node)
     {
@@ -182,6 +186,7 @@ int DroneTree::height() const { return heightHelper(root); }
 
 int DroneTree::heightHelper(TreeNode* node) const
 {
+    // TODO: empty tree 0, one node 1
     // empty tree 0, one node 1
     if (!node)
     {
