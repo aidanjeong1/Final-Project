@@ -43,12 +43,63 @@ int DeliveryUnit::getPosition(int index) const
 }
 
 // ---------- Mutators (validate as in Part I; setMaxPayload: 0 < p <= MAX_PAYLOAD_LIMIT) ----------
-void DeliveryUnit::setName(const string& n) { name = n; }
-bool DeliveryUnit::setID(int id) { /* TODO */ return false; }
-bool DeliveryUnit::setBattery(double b) { /* TODO */ return false; }
-bool DeliveryUnit::setMaxPayload(double p) { /* TODO */ return false; }
-bool DeliveryUnit::setPosition(int index, int value) { /* TODO */ return false; }
-bool DeliveryUnit::setStatus(const string& s) { /* TODO */ return false; }
+void DeliveryUnit::setName(const string& n) {
+    name = n; 
+}
+bool DeliveryUnit::setID(int id) { 
+    if (id > 0)
+    {
+        ID = id;
+        return true;
+    }
+    cout << "Error: ID must be positive." << endl;
+    
+    return false; 
+}
+
+bool DeliveryUnit::setBattery(double b) {
+    if (b >= 0 && b <= 100)
+    {
+        battery = b;
+        return true;
+    }
+    cout << "Battery outside of range." << endl;
+    return false;
+    }
+bool DeliveryUnit::setMaxPayload(double p) { 
+    if (p > 0)
+    {
+        maxPayload = p;
+        return true;
+    }
+    cout << "Max payload must be greater than 0." << endl;
+     
+    return false; 
+}
+bool DeliveryUnit::setPosition(int index, int value) { 
+     if (index != 0 && index != 1) {
+		cout << "Error: position index must be 0 (x) or 1 (y) (got " << index << ")" << endl;
+		return false;
+	}
+    if (value < 0) {
+        cout << "Error: position value must be non-negative (got " << value << ")." << endl;
+        return false;
+    }
+    position[index] = value;
+    return true; 
+}
+bool DeliveryUnit::setStatus(const string& s) { 
+     
+    if (s == "IDLE" || s == "CHARGING" || s == "MAINTENANCE")
+    {
+        status = s;
+        return true;
+    }
+    else{
+        cout << "Status must be IDLE, CHARGING, or MAINTENANCE" << endl;
+        return false;
+    }
+}
 
 // ---------- Shared behaviour ----------
 double DeliveryUnit::distanceTo(int x, int y) const
@@ -62,10 +113,11 @@ double DeliveryUnit::distanceTo(int x, int y) const
 bool DeliveryUnit::canDeliver(int x, int y, double weight) const
 {
     // TODO: as in Part I, but call the virtual batteryNeeded so each unit type uses its own formula (Done :))
-    if (battery >= batteryNeeded(x, y, weight)) {
-        return true;
+    if (status != "IDLE" || !(weight > 0.0 && weight <= maxPayload)) {
+        return false;
     }
-    return false;
+
+    return battery - batteryNeeded(x, y, weight) >= SAFETY_RESERVE;
 }
 
 void DeliveryUnit::completeDelivery(int x, int y, double weight)
