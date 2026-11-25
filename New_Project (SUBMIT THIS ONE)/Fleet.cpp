@@ -17,6 +17,13 @@ Fleet::Fleet() : head(nullptr), count(0) {}
 Fleet::~Fleet()
 {
     // TODO: delete every node AND every unit (the Fleet owns the units)
+    while (head != nullptr) 
+    {
+        UnitNode* temp = head;
+        head = head->next;
+        delete temp->unit; // Delete the DeliveryUnit
+        delete temp;       // Delete the UnitNode
+    }
 }
 
 // ---------- Linked list ----------
